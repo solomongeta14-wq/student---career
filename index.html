@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f3">
+  <meta name="description" content="Find your first opportunity, meet employers, and build a career that fits you.">
+  <title>FirstStep — Your next chapter starts here</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2925;
+      --muted: #78827d;
+      --line: #e7eae5;
+      --paper: #fff;
+      --canvas: #f6f7f3;
+      --green: #245c49;
+      --green-dark: #194635;
+      --mint: #e9f2ec;
+      --lime: #d6ef91;
+      --orange: #f5a777;
+      --shadow: 0 18px 50px rgba(32, 54, 44, .08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .app { max-width: 1440px; min-height: 100vh; margin: auto; display: grid; grid-template-columns: 252px minmax(0, 1fr); }
+
+    .sidebar { position: sticky; top: 0; height: 100vh; padding: 27px 19px 22px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 0 11px; font-size: 19px; font-weight: 760; letter-spacing: -.7px; }
+    .brand-mark { width: 31px; height: 31px; display: grid; place-items: center; color: #fff; background: var(--green); border-radius: 11px; }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .side-label { margin: 39px 12px 12px; color: #9aa39e; font-size: 10px; font-weight: 750; letter-spacing: 1.25px; text-transform: uppercase; }
+    .nav { display: grid; gap: 5px; }
+    .nav-link { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; color: #69756e; font-size: 13px; font-weight: 580; transition: .18s ease; }
+    .nav-link[hidden], [hidden] { display: none !important; }
+    .nav-link:hover, .nav-link.active { background: var(--mint); color: var(--green); }
+    .nav-link.active { font-weight: 700; }
+    .nav-link svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+    .nav-count { margin-left: auto; padding: 2px 7px; border-radius: 20px; background: #f0f2ed; color: #717b75; font-size: 10px; }
+    .sidebar-spacer { flex: 1; }
+    .profile-mini { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding: 13px 10px 0; border-top: 1px solid var(--line); }
+    button.profile-mini { width: 100%; border: 0; background: transparent; text-align: left; }
+    .avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #f5dfc9; color: #704d36; font-size: 12px; font-weight: 750; flex: 0 0 auto; }
+    .profile-mini strong, .profile-mini small { display: block; }
+    .profile-mini strong { font-size: 12px; }
+    .profile-mini small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+
+    main { min-width: 0; padding: 0 46px 60px; }
+    .topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .breadcrumb { color: var(--muted); font-size: 12px; }
+    .breadcrumb strong { color: var(--ink); font-weight: 650; }
+    .top-actions { display: flex; align-items: center; gap: 13px; }
+    .auth-button { padding: 8px 11px; border: 0; border-radius: 8px; background: var(--green); color: #fff; font-size: 10px; font-weight: 720; }
+    .icon-button { position: relative; width: 37px; height: 37px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: #59665f; }
+    .icon-button svg { width: 17px; height: 17px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+    .notification-dot { position: absolute; right: 7px; top: 7px; width: 6px; height: 6px; border: 1px solid #fff; border-radius: 50%; background: #e77c5c; }
+    .top-avatar { width: 35px; height: 35px; }
+    .content { max-width: 1100px; margin: 0 auto; }
+
+    .welcome { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 36px 0 26px; }
+    .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 10px; font-weight: 760; letter-spacing: 1.5px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(29px, 3.2vw, 39px); line-height: 1.12; letter-spacing: -1.65px; font-weight: 680; }
+    .welcome p:not(.eyebrow) { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+    .profile-progress { width: 217px; flex: 0 0 auto; margin-top: 8px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .progress-head { display: flex; justify-content: space-between; gap: 10px; color: #66716b; font-size: 10px; }
+    .progress-head strong { color: var(--green); }
+    .progress-track { height: 5px; margin-top: 12px; overflow: hidden; border-radius: 9px; background: #edf0ea; }
+    .progress-track span { display: block; width: 72%; height: 100%; border-radius: inherit; background: #7ead79; }
+    .progress-link { display: inline-block; margin-top: 10px; color: var(--green); font-size: 10px; font-weight: 700; }
+
+    .hero { position: relative; min-height: 225px; padding: 27px 32px 26px; overflow: hidden; border-radius: 18px; background: var(--green); color: #fff; }
+    .hero:after { content: ""; position: absolute; width: 290px; height: 290px; top: -135px; right: 25px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; box-shadow: 0 0 0 35px rgba(255,255,255,.035), 0 0 0 72px rgba(255,255,255,.03); }
+    .hero-copy { position: relative; z-index: 1; max-width: 500px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; color: #d3efb1; font-size: 10px; font-weight: 700; letter-spacing: .5px; }
+    .hero h2 { margin: 10px 0 8px; font-size: 26px; letter-spacing: -.85px; font-weight: 630; }
+    .hero p { max-width: 410px; margin: 0; color: #d2e0d9; font-size: 12px; line-height: 1.6; }
+    .search-row { position: relative; z-index: 2; display: flex; gap: 8px; max-width: 690px; margin-top: 21px; }
+    .search-field { min-width: 0; height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 13px; border-radius: 9px; background: #fff; color: #66716b; }
+    .search-field:first-child { flex: 1.3; }
+    .search-field:nth-child(2) { flex: 1; }
+    .search-field svg { width: 16px; height: 16px; flex: 0 0 auto; stroke: #8c9891; stroke-width: 1.8; fill: none; }
+    .search-field input, .search-field select { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 11px; }
+    .search-field input::placeholder { color: #9aa39e; }
+    .search-field select { appearance: none; cursor: pointer; }
+    .search-button { height: 44px; padding: 0 19px; border: 0; border-radius: 9px; background: var(--lime); color: #263d2e; font-size: 11px; font-weight: 750; transition: .18s ease; }
+    .search-button:hover { background: #e3f6b6; transform: translateY(-1px); }
+
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin: 29px 0 15px; }
+    .section-heading h2 { margin: 0; font-size: 17px; letter-spacing: -.4px; font-weight: 680; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+    .text-link { padding: 4px 0; border: 0; background: none; color: var(--green); font-size: 11px; font-weight: 700; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip { padding: 7px 12px; border: 1px solid #e4e9e2; border-radius: 20px; background: #fff; color: #6f7a73; font-size: 10px; transition: .16s ease; }
+    .chip:hover, .chip.selected { border-color: var(--green); background: var(--green); color: #fff; }
+
+    .jobs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .job-card { min-width: 0; padding: 17px 18px 15px; border: 1px solid var(--line); border-radius: 13px; background: #fff; transition: .18s ease; }
+    .job-card:hover { border-color: #cbd9ce; box-shadow: 0 8px 24px rgba(39, 68, 51, .055); transform: translateY(-2px); }
+    .job-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .company { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .company-logo { width: 39px; height: 39px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 11px; font-size: 12px; font-weight: 800; }
+    .logo-sage { background: #e6f0e5; color: #497454; }
+    .logo-peach { background: #fff0e5; color: #bd6c44; }
+    .logo-blue { background: #e8eefb; color: #5874b2; }
+    .logo-lilac { background: #f0eafa; color: #805fad; }
+    .logo-gold { background: #fbf1d8; color: #9e7826; }
+    .logo-cyan { background: #e2f2f1; color: #438580; }
+    .company-name { overflow: hidden; color: #77827c; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .job-title { overflow: hidden; margin-top: 4px; font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    .save-button { width: 30px; height: 30px; display: grid; place-items: center; flex: 0 0 auto; border: 0; border-radius: 8px; background: transparent; color: #94a099; }
+    .save-button:hover, .save-button.saved { background: #f0f5ef; color: var(--green); }
+    .save-button svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+    .save-button.saved svg { fill: currentColor; }
+    .job-description { min-height: 34px; margin: 13px 0 12px; color: #77817b; font-size: 10px; line-height: 1.6; }
+    .job-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .meta-pill { padding: 5px 8px; border-radius: 6px; background: #f5f6f3; color: #657069; font-size: 9px; }
+    .job-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f0f1ee; }
+    .salary { font-size: 10px; font-weight: 700; }
+    .salary span { color: #89938d; font-weight: 450; }
+    .posted { margin-top: 4px; color: #9aa39e; font-size: 9px; }
+    .apply-button { padding: 8px 12px; border: 0; border-radius: 7px; background: var(--mint); color: var(--green); font-size: 10px; font-weight: 720; transition: .15s ease; }
+    .apply-button:hover { background: var(--green); color: #fff; }
+    .empty-state { grid-column: 1 / -1; padding: 42px 20px; border: 1px dashed #d4ddd4; border-radius: 13px; background: #fff; text-align: center; color: var(--muted); font-size: 12px; }
+
+    .bottom-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-top: 25px; }
+    .panel { padding: 17px 19px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
+    .panel-head h3 { margin: 0; font-size: 13px; font-weight: 700; }
+    .panel-head a { color: var(--green); font-size: 10px; font-weight: 700; }
+    .event { display: flex; align-items: center; gap: 11px; padding: 9px 0; }
+    .event + .event { border-top: 1px solid #f0f2ee; }
+    .date-box { width: 38px; height: 40px; display: grid; align-content: center; justify-items: center; flex: 0 0 auto; border-radius: 8px; background: #f4f6ef; }
+    .date-box strong { color: var(--green); font-size: 13px; line-height: 1; }
+    .date-box span { margin-top: 3px; color: #87918a; font-size: 8px; font-weight: 700; text-transform: uppercase; }
+    .event-info { min-width: 0; }
+    .event-info strong { display: block; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .event-info span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .event-join { margin-left: auto; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; background: white; color: var(--green); font-size: 9px; font-weight: 680; }
+    .mentor-card { position: relative; overflow: hidden; background: #f0f4e9; border-color: #e4ebdc; }
+    .mentor-card:after { content: ""; position: absolute; width: 100px; height: 100px; right: -37px; bottom: -48px; border: 1px solid #d6e3cb; border-radius: 50%; box-shadow: 0 0 0 18px #e8efdf; }
+    .mentor-card .panel-head { position: relative; z-index: 1; margin-bottom: 8px; }
+    .mentor-card p { position: relative; z-index: 1; max-width: 260px; margin: 0; color: #6f7d70; font-size: 10px; line-height: 1.6; }
+    .mentor-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; margin-top: 15px; padding: 9px 11px; border-radius: 7px; background: var(--green); color: #fff; font-size: 9px; font-weight: 700; }
+    .side-panels { display: grid; gap: 12px; }
+    .employer-card { background: #fff; }
+    .employer-card p { margin: -5px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .employer-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border: 1px solid #dfe7df; border-radius: 7px; background: #fff; color: var(--green); font-size: 9px; font-weight: 700; }
+
+    .role-dialog, .employer-dialog, .auth-dialog, .profile-dialog { width: min(460px, calc(100vw - 32px)); max-height: min(85vh, 760px); padding: 25px; overflow-y: auto; border: 1px solid var(--line); border-radius: 16px; background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+    .role-dialog::backdrop, .employer-dialog::backdrop, .auth-dialog::backdrop, .profile-dialog::backdrop { background: rgba(25, 39, 32, .48); backdrop-filter: blur(3px); }
+    .dialog-close-form { display: flex; justify-content: flex-end; margin: -10px -10px 12px; }
+    .dialog-close { border: 0; font-size: 21px; }
+    .dialog-company { color: var(--muted); font-size: 11px; }
+    .role-dialog h2 { margin: 5px 0 12px; font-size: 21px; letter-spacing: -.5px; }
+    .dialog-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .role-dialog > p { margin: 17px 0 21px; color: #68746d; font-size: 12px; line-height: 1.7; }
+    .dialog-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 15px; border-top: 1px solid var(--line); }
+    .dialog-salary { font-size: 12px; font-weight: 700; }
+    .auth-dialog h2, .profile-dialog h2 { margin: 0 0 7px; font-size: 20px; letter-spacing: -.5px; }
+    .auth-intro, .profile-intro { margin: 0 0 17px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .auth-form, .profile-form { display: grid; gap: 12px; }
+    .auth-form .form-field, .profile-form .form-field { gap: 6px; }
+    .auth-form input, .auth-form select, .profile-form input, .profile-form textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: #fff; color: var(--ink); font-size: 11px; }
+    .auth-form input:focus, .auth-form select:focus, .profile-form input:focus, .profile-form textarea:focus { border-color: #8eae98; box-shadow: 0 0 0 3px #e9f2ec; }
+    .auth-switch { margin-top: 15px; padding: 0; border: 0; background: none; color: var(--green); font-size: 10px; font-weight: 700; }
+    .auth-submit { justify-self: start; padding: 10px 14px; border: 0; border-radius: 8px; background: var(--green); color: white; font-size: 10px; font-weight: 700; }
+    .profile-form textarea { min-height: 90px; resize: vertical; }
+    .applicant-card { padding: 17px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .applicant-card h3 { margin: 0 0 4px; font-size: 13px; }
+    .applicant-card p { margin: 8px 0; color: #77817b; font-size: 10px; line-height: 1.6; }
+    .applicant-job { color: var(--green); font-size: 10px; font-weight: 700; }
+    .applicant-card select { margin-top: 7px; padding: 7px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font-size: 10px; }
+    .employer-dialog h2 { margin: 0 0 7px; font-size: 20px; letter-spacing: -.5px; }
+    .employer-intro { margin: 0 0 18px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .employer-form { display: grid; gap: 12px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-field { display: grid; gap: 5px; color: #58655d; font-size: 10px; font-weight: 650; }
+    .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: #fff; color: var(--ink); font-size: 11px; }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: #8eae98; box-shadow: 0 0 0 3px #e9f2ec; }
+    .form-field textarea { min-height: 75px; resize: vertical; }
+    .employer-submit { justify-self: end; padding: 10px 14px; border: 0; border-radius: 8px; background: var(--green); color: white; font-size: 10px; font-weight: 700; }
+
+    .toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; max-width: calc(100vw - 32px); padding: 12px 17px; border-radius: 10px; background: #203d31; color: #fff; box-shadow: var(--shadow); font-size: 12px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s ease; }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .mobile-menu { display: none; }
+    .mobile-nav { display: none; }
+    .mobile-menu-backdrop { display: none; }
+
+    @media (max-width: 1000px) {
+      .app { grid-template-columns: 215px minmax(0, 1fr); }
+      main { padding-right: 28px; padding-left: 28px; }
+      .sidebar { padding-right: 13px; padding-left: 13px; }
+      .profile-progress { width: 190px; }
+    }
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar { display: none; }
+      .sidebar.mobile-open { position: fixed; z-index: 6; top: 0; left: 0; display: flex; width: min(290px, 85vw); height: 100vh; padding-top: 68px; box-shadow: var(--shadow); }
+      .mobile-menu-backdrop:not([hidden]) { position: fixed; z-index: 5; inset: 0; display: block; border: 0; background: rgba(25, 39, 32, .42); }
+      main { padding: 0 20px 88px; }
+      .topbar { height: 63px; }
+      .mobile-menu { position: relative; z-index: 7; display: grid; }
+      .breadcrumb { display: none; }
+      .welcome { padding-top: 27px; }
+      .profile-progress { display: none; }
+      .hero { padding: 23px 20px; }
+      .hero h2 { font-size: 22px; }
+      .search-row { flex-wrap: wrap; }
+      .search-field:first-child { flex: 1 1 100%; }
+      .search-field:nth-child(2) { flex: 1; }
+      .search-button { flex: 0 0 auto; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .mobile-nav { position: fixed; z-index: 4; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 6px max(8px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255,255,255,.97); backdrop-filter: blur(12px); }
+      .mobile-nav a { display: grid; justify-items: center; gap: 4px; padding: 4px; color: #849088; font-size: 9px; }
+      .mobile-nav a.active { color: var(--green); font-weight: 700; }
+      .mobile-nav svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    }
+    @media (max-width: 520px) {
+      main { padding-right: 15px; padding-left: 15px; }
+      .welcome { padding-bottom: 20px; }
+      h1 { font-size: 29px; }
+      .hero { min-height: 0; border-radius: 14px; }
+      .hero:after { right: -155px; }
+      .hero p { font-size: 11px; }
+      .search-field { height: 41px; }
+      .search-button { height: 41px; padding: 0 12px; }
+      .jobs-grid { grid-template-columns: 1fr; }
+      .job-description { min-height: 0; }
+      .section-heading { margin-top: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *:before, *:after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="FirstStep home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17 12 5l7 12"/><path d="M8 13h8"/></svg>
+        </span>
+        firststep
+      </a>
+      <p class="side-label">Workspace</p>
+      <nav class="nav">
+        <a class="nav-link active" href="#opportunities"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4V2m8 2V2M3 10h18"/></svg>Discover jobs</a>
+        <a class="nav-link" href="#opportunities" id="nav-applications" data-view="applications"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="m9 12 3 3L22 5"/></svg>My applications <span class="nav-count" id="application-count">0</span></a>
+        <a class="nav-link" href="#opportunities" id="nav-saved" data-view="saved"><svg viewBox="0 0 24 24"><path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4z"/></svg>Saved jobs <span class="nav-count" id="saved-count">0</span></a>
+        <a class="nav-link" href="#opportunities" id="nav-my-listings" data-view="mine" hidden><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4V2m8 2V2M3 10h18"/></svg>My job posts <span class="nav-count" id="listing-count">0</span></a>
+        <a class="nav-link" href="#applicants" id="nav-applicants" data-view="applicants" hidden><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>Applicants</a>
+        <a class="nav-link" href="#events"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Career events</a>
+      </nav>
+      <p class="side-label">Grow your career</p>
+      <nav class="nav">
+        <a class="nav-link" href="#mentor"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Find a mentor</a>
+        <a class="nav-link" href="#profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>My profile</a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <button class="profile-mini" id="profile-open" type="button" aria-label="Edit your profile">
+        <div class="avatar" aria-hidden="true">JD</div>
+        <div><strong id="profile-name">Guest</strong><small id="profile-role">Sign in to get started</small></div>
+      </button>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobile-menu" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Discover</strong></div>
+        <div class="top-actions">
+          <button class="icon-button" type="button" aria-label="Notifications" data-toast="You're all caught up!">
+            <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span class="notification-dot"></span>
+          </button>
+          <button class="auth-button" id="auth-button" type="button">Sign in</button>
+          <button class="avatar top-avatar" id="profile-avatar" type="button" aria-label="Open profile" hidden>JD</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="welcome">
+          <div>
+            <p class="eyebrow" id="today-label">Saturday, November 14</p>
+            <h1 id="welcome-title">Your next chapter<br>starts here, there.</h1>
+            <p>Good things happen when you take the first step.</p>
+          </div>
+          <div class="profile-progress" id="profile-progress" aria-label="Sign in to complete your profile" hidden>
+            <div class="progress-head"><span>Profile strength</span><strong>72%</strong></div>
+            <div class="progress-track"><span></span></div>
+            <button class="progress-link" id="profile-progress-link" type="button" data-open-profile>Complete your profile &rarr;</button>
+          </div>
+        </section>
+
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <span class="hero-tag"><span aria-hidden="true">✦</span> MADE FOR WHAT'S NEXT</span>
+            <h2 id="hero-title">Find a role that feels like you.</h2>
+            <p>Discover opportunities from employers who believe in fresh perspectives and early-career talent.</p>
+          </div>
+          <form class="search-row" id="search-form" role="search">
+            <label class="search-field">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+              <input id="keyword" type="search" placeholder="Job title, skill, or company" aria-label="Search job title, skill, or company">
+            </label>
+            <label class="search-field">
+              <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              <select id="location" aria-label="Filter by location">
+                <option value="">All locations</option>
+                <option>New York, NY</option>
+                <option>Austin, TX</option>
+                <option>Remote</option>
+                <option>Chicago, IL</option>
+                <option>Seattle, WA</option>
+              </select>
+            </label>
+            <button class="search-button" type="submit">Search roles</button>
+          </form>
+        </section>
+
+        <section id="opportunities" aria-labelledby="opportunities-title">
+          <div class="section-heading">
+            <div><h2 id="opportunities-title">Opportunities for you</h2><p id="results-label">Thoughtfully picked for your first big move</p></div>
+            <button class="text-link" type="button" id="clear-filters">View all roles &rarr;</button>
+          </div>
+          <div class="chips" id="job-filters" role="group" aria-label="Filter jobs by category">
+            <button class="chip selected" type="button" data-category="All roles" aria-pressed="true">All roles</button>
+            <button class="chip" type="button" data-category="Design" aria-pressed="false">Design</button>
+            <button class="chip" type="button" data-category="Technology" aria-pressed="false">Technology</button>
+            <button class="chip" type="button" data-category="Marketing" aria-pressed="false">Marketing</button>
+            <button class="chip" type="button" data-category="Business" aria-pressed="false">Business</button>
+            <button class="chip" type="button" data-category="Remote" aria-pressed="false">Remote friendly</button>
+          </div>
+          <div class="jobs-grid" id="jobs-grid" aria-live="polite"></div>
+        </section>
+        <section id="applicants-section" aria-labelledby="applicants-title" hidden>
+          <div class="section-heading">
+            <div><h2 id="applicants-title">Applicants</h2><p>Review graduate applications for your opportunities</p></div>
+          </div>
+          <div class="jobs-grid" id="applicants-grid" aria-live="polite"></div>
+        </section>
+
+        <div class="bottom-grid">
+          <section class="panel" id="events" aria-labelledby="events-title">
+            <div class="panel-head"><h3 id="events-title">Coming up for you</h3><a href="#events" data-toast="More events are coming soon.">All events &rarr;</a></div>
+            <div id="event-list"></div>
+          </section>
+          <div class="side-panels">
+            <section class="panel mentor-card" id="mentor" aria-labelledby="mentor-title">
+              <div class="panel-head"><h3 id="mentor-title">A little guidance goes a long way.</h3><span aria-hidden="true">✳</span></div>
+              <p>Connect with people who remember what starting out feels like. Get practical advice, at your pace.</p>
+              <button class="mentor-link" id="mentor-request" type="button">Request a mentor <span aria-hidden="true">&rarr;</span></button>
+            </section>
+            <section class="panel employer-card" aria-labelledby="employer-title">
+              <div class="panel-head"><h3 id="employer-title">Hiring new talent?</h3><span aria-hidden="true">↗</span></div>
+              <p>Meet motivated graduates and share an opportunity with the next generation.</p>
+              <button class="employer-link" id="open-employer-form" type="button">Post a role <span aria-hidden="true">&rarr;</span></button>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="mobile-menu-backdrop" id="mobile-menu-backdrop" type="button" aria-label="Close menu" hidden></button>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a class="active" href="#opportunities"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4V2m8 2V2M3 10h18"/></svg>Discover</a>
+    <a id="mobile-applications" href="#opportunities" data-view="applications"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="m9 12 3 3L22 5"/></svg>Applied</a>
+    <a id="mobile-saved" href="#opportunities" data-view="saved"><svg viewBox="0 0 24 24"><path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4z"/></svg>Saved</a>
+    <a id="mobile-listings" href="#opportunities" data-view="mine" hidden><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4V2m8 2V2M3 10h18"/></svg>My posts</a>
+    <a id="mobile-applicants" href="#applicants" data-view="applicants" hidden><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>Applicants</a>
+    <a href="#profile" data-profile><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </nav>
+  <dialog class="role-dialog" id="role-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-close-form"><button type="button" class="icon-button dialog-close" aria-label="Close role details" data-close-dialog="role-dialog">×</button></div>
+    <div class="dialog-company" id="dialog-company"></div>
+    <h2 id="dialog-title"></h2>
+    <div class="dialog-meta" id="dialog-meta"></div>
+    <p id="dialog-description"></p>
+    <div class="dialog-footer">
+      <span class="dialog-salary" id="dialog-salary"></span>
+      <button class="apply-button" id="submit-application" type="button">Apply now <span aria-hidden="true">→</span></button>
+    </div>
+  </dialog>
+  <dialog class="employer-dialog" id="employer-dialog" aria-labelledby="employer-dialog-title">
+    <div class="dialog-close-form"><button type="button" class="icon-button dialog-close" aria-label="Close employer form" data-close-dialog="employer-dialog">×</button></div>
+    <h2 id="employer-dialog-title">Share an opportunity</h2>
+    <p class="employer-intro">Your account's company or institution name will appear on the listing.</p>
+    <form class="employer-form" id="employer-form">
+      <label class="form-field">Job title<input name="title" required maxlength="80" placeholder="e.g. Graduate UX Designer"></label>
+      <div class="form-row">
+        <label class="form-field">Category<select name="category" required><option>Technology</option><option>Design</option><option>Marketing</option><option>Business</option></select></label>
+        <label class="form-field">Location<select name="location" required><option>Remote</option><option>New York, NY</option><option>Austin, TX</option><option>Chicago, IL</option><option>Seattle, WA</option></select></label>
+      </div>
+      <div class="form-row">
+        <label class="form-field">Opportunity type<select name="type" required><option>Full-time</option><option>Internship</option><option>Part-time</option><option>Contract</option></select></label>
+        <label class="form-field">Pay period<select name="payPeriod" required><option value="/ year">Per year</option><option value="/ hour">Per hour</option></select></label>
+      </div>
+      <label class="form-field">Compensation<input name="salary" required maxlength="30" placeholder="e.g. $60k–$75k"></label>
+      <label class="form-field">Role summary<textarea name="description" required maxlength="240" placeholder="What will the graduate work on?"></textarea></label>
+      <button class="employer-submit" type="submit">Publish opportunity</button>
+    </form>
+  </dialog>
+  <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+    <div class="dialog-close-form"><button type="button" class="icon-button dialog-close" aria-label="Close sign-in dialog" data-close-dialog="auth-dialog">×</button></div>
+    <h2 id="auth-title">Welcome back</h2>
+    <p class="auth-intro" id="auth-intro">Sign in to manage your career connections.</p>
+    <form class="auth-form" id="auth-form">
+      <label class="form-field" id="auth-name-field" hidden>Your name<input name="name" autocomplete="name" maxlength="80"></label>
+      <label class="form-field" id="auth-role-field" hidden>Account type<select name="role"><option value="graduate">Graduate / student</option><option value="employer">Employer / institution</option></select></label>
+      <label class="form-field" id="auth-company-field" hidden>Company or institution<input name="companyName" autocomplete="organization" maxlength="100"></label>
+      <label class="form-field">Email<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+      <label class="form-field">Password<input name="password" type="password" autocomplete="current-password" required minlength="10" maxlength="200"></label>
+      <button class="auth-submit" id="auth-submit" type="submit">Sign in</button>
+    </form>
+    <button class="auth-switch" id="auth-switch" type="button">New here? Create an account</button>
+  </dialog>
+  <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="profile-title">
+    <div class="dialog-close-form"><button type="button" class="icon-button dialog-close" aria-label="Close profile" data-close-dialog="profile-dialog">×</button></div>
+    <h2 id="profile-title">Your profile</h2>
+    <p class="profile-intro">Keep your information current so opportunities fit you better.</p>
+    <form class="profile-form" id="profile-form">
+      <label class="form-field">Name<input name="name" required minlength="2" maxlength="80"></label>
+      <label class="form-field" id="profile-major-field">Field of study<input name="major" maxlength="80" placeholder="e.g. Computer science"></label>
+      <label class="form-field" id="profile-year-field">Graduation year<input name="graduationYear" type="number" min="1950" max="2100" placeholder="2026"></label>
+      <label class="form-field" id="profile-company-field" hidden>Company or institution<input name="companyName" minlength="2" maxlength="100"></label>
+      <label class="form-field">About you<textarea name="bio" maxlength="500" placeholder="A short introduction"></textarea></label>
+      <button class="auth-submit" type="submit">Save profile</button>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js?v=2" defer></script>
+  <script>
+    document.querySelectorAll("[data-close-dialog]").forEach(button => {
+      button.addEventListener("click", () => {
+        const dialog = document.getElementById(button.dataset.closeDialog);
+        if (dialog && dialog.open) dialog.close();
+      });
+    });
+  </script>
+</body>
+</html>
